@@ -861,6 +861,14 @@ class MethodProxies {
             Intent service = (Intent) args[2];
             String resolvedType = (String) args[3];
             IServiceConnection conn = (IServiceConnection) args[4];
+            Log.w("Binder", "BindService(" + who + ", service=" + service.getPackage() + ")");
+
+            // Detect communication with ad Server
+            if (service.getPackage().equals("com.eyeo.hackathon2020.team10.server") &&
+                service.getAction().equals("AdService")) {
+                Log.e("Binder", "Binding to Ad Server service detected!");
+            }
+
             int flags = (int) args[5];
             int userId = VUserHandle.myUserId();
             if (isServerProcess()) {

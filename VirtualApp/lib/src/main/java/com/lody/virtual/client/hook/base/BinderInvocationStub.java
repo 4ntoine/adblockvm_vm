@@ -28,10 +28,12 @@ public class BinderInvocationStub extends MethodInvocationStub<IInterface> imple
 
     public BinderInvocationStub(RefStaticMethod<IInterface> asInterfaceMethod, IBinder binder) {
         this(asInterface(asInterfaceMethod, binder));
+        Log.w("Binder", "BinderInvocationStub1()");
     }
 
     public BinderInvocationStub(Class<?> stubClass, IBinder binder) {
         this(asInterface(stubClass, binder));
+        Log.w("Binder", "BinderInvocationStub2(" + stubClass + "," + binder + ")");
     }
 
 
@@ -39,9 +41,11 @@ public class BinderInvocationStub extends MethodInvocationStub<IInterface> imple
         super(mBaseInterface);
         mBaseBinder = getBaseInterface() != null ? getBaseInterface().asBinder() : null;
         addMethodProxy(new AsBinder());
+        Log.w("Binder", "BinderInvocationStub3(" + mBaseInterface + ")");
     }
 
     private static IInterface asInterface(RefStaticMethod<IInterface> asInterfaceMethod, IBinder binder) {
+        Log.w("Binder", "asInterface(" + asInterfaceMethod + ")");
         if (asInterfaceMethod == null || binder == null) {
             return null;
         }
@@ -49,6 +53,7 @@ public class BinderInvocationStub extends MethodInvocationStub<IInterface> imple
     }
 
     private static IInterface asInterface(Class<?> stubClass, IBinder binder) {
+        Log.w("Binder", "asInterface(" + stubClass + ")");
         try {
             if (stubClass == null || binder == null) {
                 return null;
@@ -62,6 +67,7 @@ public class BinderInvocationStub extends MethodInvocationStub<IInterface> imple
     }
 
     public void replaceService(String name) {
+        Log.w("Binder", "replaceService(" + name + ")");
         if (mBaseBinder != null) {
             ServiceManager.sCache.get().put(name, this);
         }
@@ -76,6 +82,7 @@ public class BinderInvocationStub extends MethodInvocationStub<IInterface> imple
 
         @Override
         public Object call(Object who, Method method, Object... args) throws Throwable {
+            Log.w("Binder", "call(" + who + ")");
             return BinderInvocationStub.this;
         }
     }
@@ -118,6 +125,7 @@ public class BinderInvocationStub extends MethodInvocationStub<IInterface> imple
 
     @Override
     public boolean transact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+        Log.w("Binder", "transact()");
         return mBaseBinder.transact(code, data, reply, flags);
     }
 
