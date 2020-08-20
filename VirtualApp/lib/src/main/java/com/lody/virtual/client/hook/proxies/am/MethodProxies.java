@@ -849,6 +849,8 @@ class MethodProxies {
 
     static class BindService extends MethodProxy {
 
+        private static final String TAG = "Binder";
+
         @Override
         public String getMethodName() {
             return "bindService";
@@ -856,17 +858,18 @@ class MethodProxies {
 
         @Override
         public Object call(Object who, Method method, Object... args) throws Throwable {
+
             IInterface caller = (IInterface) args[0];
             IBinder token = (IBinder) args[1];
             Intent service = (Intent) args[2];
             String resolvedType = (String) args[3];
             IServiceConnection conn = (IServiceConnection) args[4];
-            Log.w("Binder", "BindService(" + who + ", service=" + service.getPackage() + ")");
+            Log.w(TAG, "BindService(" + who + ", service=" + service.getPackage() + ")");
 
             // Detect communication with ad Server
             if (service.getPackage().equals("com.eyeo.hackathon2020.team10.server") &&
                 service.getAction().equals("AdService")) {
-                Log.e("Binder", "Binding to Ad Server service detected!");
+                Log.e(TAG, "Binding to Ad Server service detected!");
             }
 
             int flags = (int) args[5];
@@ -886,7 +889,8 @@ class MethodProxies {
                 return VActivityManager.get().bindService(caller.asBinder(), token, service, resolvedType,
                         conn, flags, userId);
             }
-            return method.invoke(who, args);
+            Log.e(TAG, "Blocking service binding and pining for the fjords");
+            return 0;
         }
 
         @Override
